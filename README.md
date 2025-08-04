@@ -1,4 +1,4 @@
-# Smart Meeting Attendance Tracker
+# Smart Meeting Attendance Tracker (basic extension)
 
 A Chrome extension that helps track attendance across meetings by storing user email information for seamless meeting participation.
 
