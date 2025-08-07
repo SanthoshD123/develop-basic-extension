@@ -1,9 +1,21 @@
 {
   "manifest_version": 3,
   "name": "Smart Meeting Attendance Tracker",
-  "description": "Tracks attendance across meetings",
-  "version": "1.0",
-  "permissions": ["storage", "tabs", "activeTab"],
+  "description": "Advanced attendance tracking across video meetings with analytics",
+  "version": "2.0",
+  "permissions": [
+    "storage", 
+    "tabs", 
+    "activeTab", 
+    "scripting",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://meet.google.com/*",
+    "https://zoom.us/*",
+    "https://*.zoom.us/*",
+    "https://teams.microsoft.com/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
@@ -11,7 +23,21 @@
     "default_popup": "popup.html",
     "default_icon": "icon.png"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://meet.google.com/*",
+        "https://zoom.us/*",
+        "https://*.zoom.us/*",
+        "https://teams.microsoft.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
   "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
     "128": "icon.png"
   }
 }
