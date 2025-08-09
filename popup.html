@@ -1,17 +1,334 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Attendance Setup</title>
+<head>
+    <title>Smart Meeting Attendance Tracker</title>
+    <meta charset="utf-8">
     <style>
-      body { font-family: Arial; padding: 10px; }
-      input, button { width: 100%; margin-top: 10px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 380px;
+            min-height: 500px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container {
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .btn-primary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .meeting-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .meeting-item {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .meeting-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .meeting-details {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .status {
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        .status.success {
+            background: rgba(76, 175, 80, 0.3);
+        }
+        
+        .status.error {
+            background: rgba(244, 67, 54, 0.3);
+        }
+        
+        .scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+        
+        .scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.7;
+        }
     </style>
-  </head>
-  <body>
-    <h3>Enter your email</h3>
-    <input type="email" id="emailInput" placeholder="you@example.com" />
-    <button id="saveBtn">Save</button>
-    <p id="status"></p>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Smart Meeting Tracker</h2>
+            <p>Advanced attendance analytics</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-button active" data-tab="setup">Setup</button>
+            <button class="tab-button" data-tab="dashboard">Dashboard</button>
+            <button class="tab-button" data-tab="settings">Settings</button>
+        </div>
+        
+        <!-- Setup Tab -->
+        <div class="tab-content active" id="setup">
+            <div class="form-group">
+                <label for="emailInput">Your Email</label>
+                <input type="email" id="emailInput" placeholder="you@example.com" />
+            </div>
+            
+            <div class="form-group">
+                <label for="nameInput">Full Name</label>
+                <input type="text" id="nameInput" placeholder="Your full name" />
+            </div>
+            
+            <div class="form-group">
+                <label for="organizationInput">Organization</label>
+                <input type="text" id="organizationInput" placeholder="Company/School name" />
+            </div>
+            
+            <button class="btn btn-primary" id="saveBtn">Save Profile</button>
+            <button class="btn btn-secondary" id="exportBtn">Export Data</button>
+            
+            <div id="status"></div>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div class="tab-content" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalMeetings">0</div>
+                    <div class="stat-label">Total Meetings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalHours">0h</div>
+                    <div class="stat-label">Total Hours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgDuration">0m</div>
+                    <div class="stat-label">Avg Duration</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="thisWeek">0</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+            </div>
+            
+            <h3 style="margin-bottom: 10px;">Recent Meetings</h3>
+            <div class="meeting-list scrollbar" id="meetingList">
+                <div class="loading">No meetings tracked yet</div>
+            </div>
+            
+            <button class="btn btn-secondary" id="clearDataBtn">Clear All Data</button>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <div class="checkbox-group">
+                <input type="checkbox" id="autoTrackCheck" checked>
+                <label for="autoTrackCheck">Auto-track meetings</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="notificationsCheck" checked>
+                <label for="notificationsCheck">Show notifications</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="trackBreaksCheck" checked>
+                <label for="trackBreaksCheck">Track break times</label>
+            </div>
+            
+            <div class="form-group">
+                <label for="reminderTime">Meeting reminders</label>
+                <select id="reminderTime">
+                    <option value="0">Disabled</option>
+                    <option value="5">5 minutes before</option>
+                    <option value="10" selected>10 minutes before</option>
+                    <option value="15">15 minutes before</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 6px;">
+                <h4 style="margin-bottom: 10px;">Supported Platforms</h4>
+                <div style="font-size: 12px; opacity: 0.8;">
+                    ✓ Google Meet<br>
+                    ✓ Zoom Meetings<br>
+                    ✓ Microsoft Teams<br>
+                    More platforms coming soon!
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="popup.js"></script>
-  </body>
+</body>
 </html>
