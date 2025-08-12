@@ -413,12 +413,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**⭐ Star this repo** if you find it helpful!
-
-**📢 Share** with colleagues who spend lots of time in meetings!
-
-**🤝 Contribute** to help make meeting tracking better for everyone!
-
----
-
 *Smart Meeting Attendance Tracker v2.0 - Making meeting analytics simple and private.*
